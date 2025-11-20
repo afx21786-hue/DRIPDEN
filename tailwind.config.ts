@@ -86,6 +86,7 @@ export default {
         sans: ["var(--font-sans)"],
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
+        heading: ["Sora", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -96,10 +97,44 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "neon-pulse": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px rgba(168, 92, 255, 0.4), 0 0 40px rgba(168, 92, 255, 0.2)",
+          },
+          "50%": {
+            boxShadow: "0 0 30px rgba(168, 92, 255, 0.6), 0 0 60px rgba(168, 92, 255, 0.3)",
+          },
+        },
+        "float-up": {
+          from: {
+            opacity: "0",
+            transform: "translateY(20px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        shimmer: {
+          "0%": {
+            backgroundPosition: "-1000px 0",
+          },
+          "100%": {
+            backgroundPosition: "1000px 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
+        "float-up": "float-up 0.6s ease-out forwards",
+        shimmer: "shimmer 2s infinite",
+      },
+      boxShadow: {
+        "neon-primary": "0 0 20px rgba(168, 92, 255, 0.4), 0 0 40px rgba(168, 92, 255, 0.2)",
+        "neon-secondary": "0 0 20px rgba(255, 125, 220, 0.4), 0 0 40px rgba(255, 125, 220, 0.2)",
+        "neon-accent": "0 0 20px rgba(76, 123, 255, 0.4), 0 0 40px rgba(76, 123, 255, 0.2)",
       },
     },
   },

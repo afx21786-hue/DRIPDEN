@@ -2,48 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-/* LIGHT MODE */
+/* LIGHT MODE - Not primary for DRIPDEN but kept for compatibility */
 :root {
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
-  --background: 240 6% 97%;
-  --foreground: 240 6% 10%;
-  --border: 240 6% 90%;
-  --card: 240 6% 96%;
-  --card-foreground: 240 6% 12%;
-  --card-border: 240 6% 93%;
-  --sidebar: 240 6% 94%;
-  --sidebar-foreground: 240 6% 14%;
-  --sidebar-border: 240 6% 91%;
+  --background: 222 47% 4%;
+  --foreground: 0 0% 97%;
+  --border: 272 76% 25%;
+  --card: 222 47% 7%;
+  --card-foreground: 0 0% 97%;
+  --card-border: 272 76% 20%;
+  --sidebar: 222 47% 6%;
+  --sidebar-foreground: 0 0% 97%;
+  --sidebar-border: 272 76% 20%;
   --sidebar-primary: 272 76% 63%;
   --sidebar-primary-foreground: 272 76% 98%;
-  --sidebar-accent: 240 8% 88%;
-  --sidebar-accent-foreground: 240 8% 18%;
+  --sidebar-accent: 222 47% 10%;
+  --sidebar-accent-foreground: 0 0% 97%;
   --sidebar-ring: 272 76% 63%;
-  --popover: 240 8% 92%;
-  --popover-foreground: 240 8% 15%;
-  --popover-border: 240 8% 88%;
-  --primary: 272 76% 28%;
+  --popover: 222 47% 8%;
+  --popover-foreground: 0 0% 97%;
+  --popover-border: 272 76% 25%;
+  --primary: 272 76% 63%;
   --primary-foreground: 272 76% 98%;
-  --secondary: 240 10% 86%;
-  --secondary-foreground: 240 10% 18%;
-  --muted: 240 12% 89%;
-  --muted-foreground: 240 12% 35%;
-  --accent: 240 14% 88%;
-  --accent-foreground: 240 14% 22%;
-  --destructive: 0 72% 32%;
-  --destructive-foreground: 0 72% 98%;
-  --input: 240 8% 75%;
+  --secondary: 328 85% 68%;
+  --secondary-foreground: 0 0% 97%;
+  --muted: 222 47% 12%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 218 90% 62%;
+  --accent-foreground: 0 0% 97%;
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 97%;
+  --input: 272 76% 25%;
   --ring: 272 76% 63%;
-  --chart-1: 272 76% 28%;
-  --chart-2: 328 85% 35%;
-  --chart-3: 218 90% 32%;
-  --chart-4: 162 75% 30%;
-  --chart-5: 240 12% 35%;
-  --font-sans: Open Sans, sans-serif;
+  --chart-1: 272 76% 63%;
+  --chart-2: 328 85% 68%;
+  --chart-3: 218 90% 62%;
+  --chart-4: 162 75% 60%;
+  --chart-5: 240 12% 70%;
+  --font-sans: Inter, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: .5rem;
@@ -93,34 +93,34 @@
   --opaque-button-border-intensity: 9;
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
-  --background: 240 8% 6%;
-  --foreground: 240 6% 96%;
-  --border: 240 8% 16%;
-  --card: 240 8% 8%;
-  --card-foreground: 240 6% 94%;
-  --card-border: 240 8% 11%;
-  --sidebar: 240 8% 10%;
-  --sidebar-foreground: 240 6% 92%;
-  --sidebar-border: 240 8% 14%;
+  --background: 222 47% 4%;
+  --foreground: 0 0% 97%;
+  --border: 272 76% 25%;
+  --card: 222 47% 7%;
+  --card-foreground: 0 0% 97%;
+  --card-border: 272 76% 20%;
+  --sidebar: 222 47% 6%;
+  --sidebar-foreground: 0 0% 97%;
+  --sidebar-border: 272 76% 20%;
   --sidebar-primary: 272 76% 63%;
   --sidebar-primary-foreground: 272 76% 98%;
-  --sidebar-accent: 240 12% 15%;
-  --sidebar-accent-foreground: 240 12% 88%;
+  --sidebar-accent: 222 47% 10%;
+  --sidebar-accent-foreground: 0 0% 97%;
   --sidebar-ring: 272 76% 63%;
-  --popover: 240 10% 13%;
-  --popover-foreground: 240 8% 90%;
-  --popover-border: 240 10% 17%;
-  --primary: 272 76% 28%;
+  --popover: 222 47% 8%;
+  --popover-foreground: 0 0% 97%;
+  --popover-border: 272 76% 25%;
+  --primary: 272 76% 63%;
   --primary-foreground: 272 76% 98%;
-  --secondary: 240 12% 18%;
-  --secondary-foreground: 240 12% 88%;
-  --muted: 240 14% 16%;
-  --muted-foreground: 240 14% 72%;
-  --accent: 240 16% 17%;
-  --accent-foreground: 240 16% 86%;
-  --destructive: 0 72% 32%;
-  --destructive-foreground: 0 72% 98%;
-  --input: 240 10% 28%;
+  --secondary: 328 85% 68%;
+  --secondary-foreground: 0 0% 97%;
+  --muted: 222 47% 12%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 218 90% 62%;
+  --accent-foreground: 0 0% 97%;
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 97%;
+  --input: 272 76% 25%;
   --ring: 272 76% 63%;
   --chart-1: 272 85% 72%;
   --chart-2: 328 90% 75%;
@@ -172,6 +172,14 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  html {
+    @apply dark;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', sans-serif;
   }
 }
 
@@ -284,5 +292,77 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+  
+  /* DRIPDEN Neon Glow Effects */
+  .neon-glow-primary {
+    box-shadow: 0 0 20px rgba(168, 92, 255, 0.4), 0 0 40px rgba(168, 92, 255, 0.2);
+  }
+  
+  .neon-glow-secondary {
+    box-shadow: 0 0 20px rgba(255, 125, 220, 0.4), 0 0 40px rgba(255, 125, 220, 0.2);
+  }
+  
+  .neon-glow-accent {
+    box-shadow: 0 0 20px rgba(76, 123, 255, 0.4), 0 0 40px rgba(76, 123, 255, 0.2);
+  }
+  
+  .neon-border-gradient {
+    border-image: linear-gradient(135deg, #A85CFF, #FF7DDC, #4C7BFF) 1;
+  }
+  
+  .glass-blur {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #A85CFF, #FF7DDC, #4C7BFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  @keyframes neon-pulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(168, 92, 255, 0.4), 0 0 40px rgba(168, 92, 255, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(168, 92, 255, 0.6), 0 0 60px rgba(168, 92, 255, 0.3);
+    }
+  }
+  
+  .neon-pulse {
+    animation: neon-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes float-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-float-up {
+    animation: float-up 0.6s ease-out forwards;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(168, 92, 255, 0.2), transparent);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
   }
 }

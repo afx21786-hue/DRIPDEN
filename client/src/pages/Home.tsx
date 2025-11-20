@@ -1,0 +1,232 @@
+import { useState } from "react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import FlashDropBanner from "@/components/FlashDropBanner";
+import FilterBar from "@/components/FilterBar";
+import ShopCard from "@/components/ShopCard";
+import AIFeatureCard from "@/components/AIFeatureCard";
+import DripBotChat from "@/components/DripBotChat";
+import { Sparkles, Brain, TrendingUp, Zap } from "lucide-react";
+import { motion } from "framer-motion";
+
+import bannerImg1 from "@assets/generated_images/streetwear_shop_banner_image.png";
+import bannerImg2 from "@assets/generated_images/vintage_shop_banner_image.png";
+import bannerImg3 from "@assets/generated_images/minimal_shop_banner_image.png";
+import productImg1 from "@assets/generated_images/sneaker_product_image_1.png";
+import productImg2 from "@assets/generated_images/jacket_product_image_2.png";
+import productImg3 from "@assets/generated_images/hoodie_product_image_3.png";
+
+export default function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const mockShops = [
+    {
+      id: "1",
+      name: "Urban Threads",
+      banner: bannerImg1,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=urban",
+      tags: ["Streetwear", "Trending", "Local Favorite"],
+      location: "Downtown",
+      products: [
+        { image: productImg1 },
+        { image: productImg2 },
+        { image: productImg3 }
+      ],
+      isTrending: true
+    },
+    {
+      id: "2",
+      name: "Retro Vibes",
+      banner: bannerImg2,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=retro",
+      tags: ["Vintage", "Unique", "90s"],
+      location: "East Side",
+      products: [
+        { image: productImg2 },
+        { image: productImg3 },
+        { image: productImg1 }
+      ],
+      isTrending: false
+    },
+    {
+      id: "3",
+      name: "Minimal Studio",
+      banner: bannerImg3,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=minimal",
+      tags: ["Minimal", "Clean", "Modern"],
+      location: "West District",
+      products: [
+        { image: productImg3 },
+        { image: productImg1 },
+        { image: productImg2 }
+      ],
+      isTrending: false
+    },
+    {
+      id: "4",
+      name: "Neon District",
+      banner: bannerImg1,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=neon",
+      tags: ["Streetwear", "Hypebeast", "Limited"],
+      location: "Central",
+      products: [
+        { image: productImg1 },
+        { image: productImg3 },
+        { image: productImg2 }
+      ],
+      isTrending: true
+    },
+    {
+      id: "5",
+      name: "Pastel Dreams",
+      banner: bannerImg3,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=pastel",
+      tags: ["Girly", "Soft Girl", "Kawaii"],
+      location: "North End",
+      products: [
+        { image: productImg2 },
+        { image: productImg1 },
+        { image: productImg3 }
+      ],
+      isTrending: false
+    },
+    {
+      id: "6",
+      name: "Sneaker Haven",
+      banner: bannerImg2,
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=sneaker",
+      tags: ["Sneakers", "Limited Drops", "Authentic"],
+      location: "South Plaza",
+      products: [
+        { image: productImg1 },
+        { image: productImg2 },
+        { image: productImg3 }
+      ],
+      isTrending: true
+    }
+  ];
+
+  const aiFeatures = [
+    {
+      icon: Sparkles,
+      title: "AI Outfit Combiner",
+      description: "Upload your favorite piece and let AI create 3 complete outfit combinations across different vibes",
+      gradient: "bg-gradient-to-br from-primary to-secondary"
+    },
+    {
+      icon: Brain,
+      title: "AI Drip Analyzer",
+      description: "Rate your fit, detect clothing items, and get personalized glow-up advice from our AI",
+      gradient: "bg-gradient-to-br from-secondary to-accent"
+    },
+    {
+      icon: TrendingUp,
+      title: "AI Shop Recommendations",
+      description: "Get personalized shop suggestions based on your taste, trends, and local fashion heat",
+      gradient: "bg-gradient-to-br from-accent to-primary"
+    },
+    {
+      icon: Zap,
+      title: "Flash Drop Predictor",
+      description: "AI predicts which items will trend next, giving you early access to upcoming heat",
+      gradient: "bg-gradient-to-br from-primary via-secondary to-accent"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar 
+        dripCoins={1250}
+        cartItems={3}
+        wishlistItems={12}
+        onSearch={setSearchQuery}
+      />
+
+      <HeroSection />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <FlashDropBanner />
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-6"
+        >
+          <div>
+            <h2 className="text-3xl font-heading font-bold mb-2">
+              AI-Powered <span className="gradient-text">Fashion Tools</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Elevate your style with cutting-edge AI technology
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {aiFeatures.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+              >
+                <AIFeatureCard
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  gradient={feature.gradient}
+                  onClick={() => console.log(`Clicked: ${feature.title}`)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="space-y-6"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-heading font-bold mb-2">
+                Explore <span className="gradient-text">Local Shops</span>
+              </h2>
+              <p className="text-muted-foreground">
+                Discover your city's hottest fashion destinations
+              </p>
+            </div>
+          </div>
+
+          <FilterBar onFilterChange={setActiveFilter} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockShops.map((shop, index) => (
+              <motion.div
+                key={shop.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+              >
+                <ShopCard
+                  {...shop}
+                  onClick={() => console.log(`Clicked shop: ${shop.name}`)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+      </div>
+
+      <DripBotChat />
+    </div>
+  );
+}
