@@ -269,4 +269,58 @@ export const api = {
       return response.json();
     },
   },
+
+  // AI Features
+  ai: {
+    chat: async (message: string, conversationHistory: Array<{ role: "user" | "assistant"; content: string }> = []) => {
+      const response = await fetchAPI("/ai/chat", {
+        method: "POST",
+        body: JSON.stringify({ message, conversationHistory }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to chat with DripBot");
+      }
+      return response.json();
+    },
+    analyzeDrip: async (imageBase64: string) => {
+      const response = await fetchAPI("/ai/analyze-drip", {
+        method: "POST",
+        body: JSON.stringify({ image: imageBase64 }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to analyze drip");
+      }
+      return response.json();
+    },
+    recommendShops: async (preferences: string) => {
+      const response = await fetchAPI("/ai/recommend-shops", {
+        method: "POST",
+        body: JSON.stringify({ preferences }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to get shop recommendations");
+      }
+      return response.json();
+    },
+    predictFlashDrop: async (trends: string[] = []) => {
+      const response = await fetchAPI("/ai/predict-flash-drop", {
+        method: "POST",
+        body: JSON.stringify({ trends }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to predict flash drops");
+      }
+      return response.json();
+    },
+    buildOutfit: async (preferences: { style?: string; occasion?: string; colors?: string[]; budget?: string }) => {
+      const response = await fetchAPI("/ai/build-outfit", {
+        method: "POST",
+        body: JSON.stringify({ preferences }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to build outfit");
+      }
+      return response.json();
+    },
+  },
 };

@@ -3,6 +3,9 @@ import { Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth-context";
 
 interface ProductCardProps {
   id: string;
@@ -24,6 +27,44 @@ export default function ProductCard({
   onClick
 }: ProductCardProps) {
   const [saved, setSaved] = useState(isSaved);
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to save items to your wishlist",
+      });
+      return;
+    }
+
+    try {
+      if (saved) {
+        await api.wishlist.remove(id);
+        setSaved(false);
+        toast({
+          title: "Removed from wishlist",
+          description: `${name} has been removed from your wishlist`,
+        });
+      } else {
+        await api.wishlist.add(id);
+        setSaved(true);
+        toast({
+          title: "Added to wishlist",
+          description: `${name} has been added to your wishlist`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update wishlist",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <motion.div
@@ -47,11 +88,7 @@ export default function ProductCard({
             size="icon"
             variant="ghost"
             className="absolute top-2 right-2 bg-card/80 backdrop-blur-sm hover-elevate active-elevate-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSaved(!saved);
-              console.log(`${saved ? 'Removed from' : 'Added to'} wishlist: ${name}`);
-            }}
+            onClick={handleToggleWishlist}
             data-testid="button-save-product"
           >
             <Heart className={`w-4 h-4 ${saved ? 'fill-secondary text-secondary' : ''}`} />

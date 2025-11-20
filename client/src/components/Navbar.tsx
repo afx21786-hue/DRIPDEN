@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {
   dripCoins?: number;
@@ -21,6 +22,45 @@ export default function Navbar({
 }: NavbarProps) {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  const handleWishlistClick = () => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to view your wishlist",
+      });
+      setLocation("/login");
+      return;
+    }
+    toast({
+      title: "Wishlist",
+      description: "Wishlist page coming soon!",
+    });
+  };
+
+  const handleCartClick = () => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to view your cart",
+      });
+      setLocation("/login");
+      return;
+    }
+    toast({
+      title: "Cart",
+      description: "Cart page coming soon!",
+    });
+  };
+
+  const handleProfileClick = () => {
+    toast({
+      title: "Profile",
+      description: "Profile page coming soon!",
+    });
+  };
+
   return (
     <motion.nav 
       initial={{ y: -20, opacity: 0 }}
@@ -62,6 +102,7 @@ export default function Navbar({
                   size="icon" 
                   variant="ghost" 
                   className="relative hover-elevate active-elevate-2"
+                  onClick={handleWishlistClick}
                   data-testid="button-wishlist"
                 >
                   <Heart className="w-5 h-5" />
@@ -79,6 +120,7 @@ export default function Navbar({
                   size="icon" 
                   variant="ghost" 
                   className="relative hover-elevate active-elevate-2"
+                  onClick={handleCartClick}
                   data-testid="button-cart"
                 >
                   <ShoppingCart className="w-5 h-5" />
@@ -96,6 +138,7 @@ export default function Navbar({
                   size="icon" 
                   variant="ghost"
                   className="hover-elevate active-elevate-2"
+                  onClick={handleProfileClick}
                   data-testid="button-profile"
                 >
                   <User className="w-5 h-5" />

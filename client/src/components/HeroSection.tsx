@@ -2,8 +2,20 @@ import { motion } from "framer-motion";
 import { Sparkles, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImg from "@assets/generated_images/hero_neon_cityscape_background.png";
+import { useLocation } from "wouter";
 
 export default function HeroSection() {
+  const [, setLocation] = useLocation();
+
+  const handleExploreShops = () => {
+    window.scrollTo({ top: 600, behavior: "smooth" });
+  };
+
+  const handleAIOutfitBuilder = () => {
+    const event = new CustomEvent("openDripBot", { detail: { action: "outfit-combiner" } });
+    window.dispatchEvent(event);
+  };
+
   return (
     <div className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       <div 
@@ -37,6 +49,7 @@ export default function HeroSection() {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-primary to-secondary hover-elevate active-elevate-2 text-lg px-8"
+              onClick={handleExploreShops}
               data-testid="button-explore-shops"
             >
               <Sparkles className="w-5 h-5 mr-2" />
@@ -46,6 +59,7 @@ export default function HeroSection() {
               size="lg" 
               variant="outline" 
               className="border-primary/50 glass-blur hover-elevate active-elevate-2 text-lg px-8"
+              onClick={handleAIOutfitBuilder}
               data-testid="button-ai-outfit"
             >
               <Zap className="w-5 h-5 mr-2" />

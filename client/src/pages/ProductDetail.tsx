@@ -10,12 +10,79 @@ import DripBotChat from "@/components/DripBotChat";
 import productImg1 from "@assets/generated_images/sneaker_product_image_1.png";
 import productImg2 from "@assets/generated_images/jacket_product_image_2.png";
 import productImg3 from "@assets/generated_images/hoodie_product_image_3.png";
+import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth-context";
+import { useLocation } from "wouter";
 
 export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Neon Purple");
   const [isSaved, setIsSaved] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+
+  const handleToggleWishlist = async () => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to save items",
+      });
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (isSaved) {
+        await api.wishlist.remove("1");
+        setIsSaved(false);
+        toast({
+          title: "Removed from wishlist",
+          description: "Item removed from your wishlist",
+        });
+      } else {
+        await api.wishlist.add("1");
+        setIsSaved(true);
+        toast({
+          title: "Added to wishlist",
+          description: "Item added to your wishlist",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update wishlist",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to add items to cart",
+      });
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await api.cart.add("1", quantity, selectedSize, selectedColor);
+      toast({
+        title: "Added to cart",
+        description: `${quantity} item(s) added to your cart`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add to cart",
+        variant: "destructive",
+      });
+    }
+  };
 
   const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const colors = ["Neon Purple", "Electric Blue", "Pink Glow", "Mint Fresh"];
@@ -34,6 +101,7 @@ export default function ProductDetail() {
         <Button 
           variant="ghost" 
           className="mb-6 hover-elevate active-elevate-2"
+          onClick={() => navigate("/")}
           data-testid="button-back"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -89,10 +157,7 @@ export default function ProductDetail() {
                   size="icon"
                   variant="ghost"
                   className="hover-elevate active-elevate-2"
-                  onClick={() => {
-                    setIsSaved(!isSaved);
-                    console.log(`${isSaved ? 'Removed from' : 'Added to'} wishlist`);
-                  }}
+                  onClick={handleToggleWishlist}
                   data-testid="button-save"
                 >
                   <Heart className={`w-6 h-6 ${isSaved ? 'fill-secondary text-secondary' : ''}`} />
@@ -140,10 +205,7 @@ export default function ProductDetail() {
                         ? "bg-primary neon-glow-primary" 
                         : "border-primary/30 hover-elevate active-elevate-2"
                     }`}
-                    onClick={() => {
-                      setSelectedSize(size);
-                      console.log(`Selected size: ${size}`);
-                    }}
+                    onClick={() => setSelectedSize(size)}
                     data-testid={`button-size-${size.toLowerCase()}`}
                   >
                     {size}
@@ -164,10 +226,7 @@ export default function ProductDetail() {
                         ? "bg-primary neon-glow-primary" 
                         : "border-primary/30 hover-elevate active-elevate-2"
                     }`}
-                    onClick={() => {
-                      setSelectedColor(color);
-                      console.log(`Selected color: ${color}`);
-                    }}
+                    onClick={() => setSelectedColor(color)}
                     data-testid={`button-color-${color.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     {color}
@@ -199,7 +258,7 @@ export default function ProductDetail() {
 
               <Button 
                 className="flex-1 bg-gradient-to-r from-primary to-secondary hover-elevate active-elevate-2 font-semibold text-lg"
-                onClick={() => console.log(`Added ${quantity} to cart`)}
+                onClick={handleAddToCart}
                 data-testid="button-add-to-cart"
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />

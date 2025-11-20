@@ -395,6 +395,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Features routes
+  const { chatWithDripBot, analyzeDrip, recommendShops, predictFlashDrop, buildOutfit } = await import("./openai");
+
+  app.post("/api/ai/chat", async (req, res, next) => {
+    try {
+      const { message, conversationHistory = [] } = req.body;
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      const response = await chatWithDripBot(message, conversationHistory);
+      res.json({ response });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/ai/analyze-drip", async (req, res, next) => {
+    try {
+      const { image } = req.body;
+      if (!image) {
+        return res.status(400).json({ message: "Image is required" });
+      }
+
+      const result = await analyzeDrip(image);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/ai/recommend-shops", async (req, res, next) => {
+    try {
+      const { preferences } = req.body;
+      if (!preferences) {
+        return res.status(400).json({ message: "Preferences are required" });
+      }
+
+      const result = await recommendShops(preferences);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/ai/predict-flash-drop", async (req, res, next) => {
+    try {
+      const { trends = [] } = req.body;
+      const result = await predictFlashDrop(trends);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/ai/build-outfit", async (req, res, next) => {
+    try {
+      const { preferences = {} } = req.body;
+      const result = await buildOutfit(preferences);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

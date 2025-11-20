@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Sparkles, Brain, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -23,9 +25,23 @@ export default function DripBotChat() {
     }
   ]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    const handleOpenDripBot = (event: any) => {
+      const action = event.detail?.action;
+      if (action) {
+        handleMenuItemClick(action);
+      }
+    };
+
+    window.addEventListener("openDripBot", handleOpenDripBot);
+    return () => window.removeEventListener("openDripBot", handleOpenDripBot);
+  }, []);
+
+  const sendMessage = async () => {
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -35,15 +51,37 @@ export default function DripBotChat() {
 
     setMessages(prev => [...prev, userMessage]);
     setInput("");
+    setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const conversationHistory = messages.slice(1).map(msg => ({
+        role: msg.sender === "user" ? "user" as const : "assistant" as const,
+        content: msg.text
+      }));
+
+      const result = await api.ai.chat(userMessage.text, conversationHistory);
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm analyzing your request... Let me find the perfect items for you! ✨",
+        text: result.response,
         sender: "bot"
       };
       setMessages(prev => [...prev, botMessage]);
-    }, 1000);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get response from DripBot. Please try again.",
+        variant: "destructive",
+      });
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I'm having trouble connecting right now. Please try again! 💫",
+        sender: "bot"
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const menuItems = [
@@ -79,13 +117,103 @@ export default function DripBotChat() {
     }
   ];
 
-  const handleMenuItemClick = (itemId: string) => {
+  const handleMenuItemClick = async (itemId: string) => {
     if (itemId === "chat") {
       setIsChatOpen(true);
       setIsMenuOpen(false);
-    } else {
-      console.log(`Clicked: ${itemId}`);
-      setIsMenuOpen(false);
+      return;
+    }
+
+    setIsMenuOpen(false);
+    
+    if (itemId === "shop-recommendations") {
+      setIsChatOpen(true);
+      const loadingMsg: Message = {
+        id: Date.now().toString(),
+        text: "Let me find the perfect shops for you based on the latest trends! 🏪✨",
+        sender: "bot"
+      };
+      setMessages(prev => [...prev, loadingMsg]);
+      
+      try {
+        const result = await api.ai.recommendShops("streetwear, trendy, urban fashion");
+        const recommendations = result.recommendations
+          .map((rec: any, idx: number) => `${idx + 1}. ${rec.shopName} - ${rec.reason} (Match: ${Math.round(rec.matchScore * 100)}%)`)
+          .join("\n");
+        
+        const responseMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          text: `Here are my top shop recommendations for you:\n\n${recommendations}\n\nWant to explore any of these? Let me know!`,
+          sender: "bot"
+        };
+        setMessages(prev => [...prev, responseMsg]);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to get shop recommendations",
+          variant: "destructive",
+        });
+      }
+    } else if (itemId === "flash-predictor") {
+      setIsChatOpen(true);
+      const loadingMsg: Message = {
+        id: Date.now().toString(),
+        text: "Analyzing trends to predict the next big flash drops... 🔮⚡",
+        sender: "bot"
+      };
+      setMessages(prev => [...prev, loadingMsg]);
+      
+      try {
+        const result = await api.ai.predictFlashDrop(["streetwear", "vintage", "sneakers"]);
+        const responseMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          text: `${result.prediction}\n\nConfidence: ${Math.round(result.confidence * 100)}%\n\nCategories to watch: ${result.suggestedCategories.join(", ")}`,
+          sender: "bot"
+        };
+        setMessages(prev => [...prev, responseMsg]);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to predict flash drops",
+          variant: "destructive",
+        });
+      }
+    } else if (itemId === "outfit-combiner") {
+      setIsChatOpen(true);
+      const loadingMsg: Message = {
+        id: Date.now().toString(),
+        text: "Building the perfect outfit for you... 👔✨",
+        sender: "bot"
+      };
+      setMessages(prev => [...prev, loadingMsg]);
+      
+      try {
+        const result = await api.ai.buildOutfit({
+          style: "streetwear",
+          occasion: "casual",
+        });
+        const outfit = result.outfit.items
+          .map((item: any) => `• ${item.category}: ${item.description}`)
+          .join("\n");
+        
+        const responseMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          text: `Here's your personalized outfit:\n\n${outfit}\n\nVibe: ${result.outfit.totalVibe}\nPerfect for: ${result.outfit.occasions.join(", ")}`,
+          sender: "bot"
+        };
+        setMessages(prev => [...prev, responseMsg]);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to build outfit",
+          variant: "destructive",
+        });
+      }
+    } else if (itemId === "drip-analyzer") {
+      toast({
+        title: "Drip Analyzer",
+        description: "Upload a photo to analyze your outfit! Coming soon...",
+      });
     }
   };
 
@@ -155,6 +283,7 @@ export default function DripBotChat() {
                   <Button 
                     size="icon" 
                     onClick={sendMessage}
+                    disabled={isLoading}
                     className="bg-primary hover-elevate active-elevate-2"
                     data-testid="button-send-message"
                   >
