@@ -1,0 +1,422 @@
+THE ULTIMATE DRIPDEN GEN-Z DARK-NEON PROMPT (WITH AI FEATURES)
+
+Project Name:
+DRIPDEN — The Local Gen-Z Fashion Hub
+
+Goal:
+Create a dark-mode, neon-glowing, Gen-Z styled ecommerce platform where users shop from local fashion shops, discover hyper-local drip, use AI to build outfits, and explore the city’s fashion scene.
+
+Users don’t see products first — they see neon Shop Cards.
+Clicking a shop opens their products.
+
+🎨 AESTHETIC REQUIREMENTS
+
+Dark mode
+
+Neon gradients (Purple → Pink → Blue → Mint)
+
+TikTok-style UI animations
+
+Glass blur panels
+
+Glow effects
+
+Smooth micro-animations
+
+Rounded edges
+
+Iconography: drip, neon lightning, holographic accents
+
+Colors
+
+#A85CFF Neon Grape
+
+#FF7DDC Cotton Candy
+
+#4C7BFF Electric Blue
+
+#6FFFC7 Mint Pop
+
+#F8F8FA Cloud White
+
+#0E0E11 Midnight Graphite
+
+Fonts
+
+Sora (Headings)
+
+Inter / Manrope (Body)
+
+🤖 AI FEATURES — MUST INCLUDE
+✔ DRIP AI Outfit Combiner
+
+Upload image → AI creates matching outfits
+
+Select product → AI builds 3 full looks
+
+Vibes: Streetwear, Soft Girl, Minimal, Techcore, Athlete, Party
+
+✔ AI Drip Analyzer
+
+Rates the fit
+
+Detects clothes
+
+Suggests similar items from shops
+
+Gives “Glow-Up Advice”
+
+✔ AI Chat Assistant (DripBot)
+
+Neon floating chatbot
+
+Helps find outfits
+
+Recommends shops
+
+Finds better deals
+
+Summarizes shop vibes
+
+Assists with search
+
+Tone: Gen-Z funny smart
+
+✔ AI Shop Recommendations
+
+Personalized
+
+Based on user taste, trends, and local fashion heat
+
+✔ AI Outfit Boards
+
+Auto-generated curated boards
+
+Seasonal, trending, or vibe-based
+
+✔ AI Flash Drop Predictor
+
+Predicts which items will trend
+
+Creates “Upcoming Heat” section
+
+🛍️ CORE DRIPDEN FEATURES (NON-AI)
+Firebase Auth (Login/Signup)
+
+The app must include a modern, smooth, secure authentication system using Firebase Auth.
+
+Users can:
+
+Sign up with email + password
+
+Sign in with Google
+
+Reset password
+
+Log out
+
+Session persists automatically
+
+Aesthetic: centered glass blur panel, neon glow buttons, smooth micro animations.
+
+🏪 2. Shop Explorer (NEON SHOP CARDS)
+
+This is the core entry point after login.
+
+Instead of showing products, users see local shop cards, each with:
+
+Neon glow border
+
+Shop logo (circular glow)
+
+Shop banner
+
+Shop tags (Streetwear, Trending, Local Favorite, etc.)
+
+3 mini product previews
+
+Hover = card lifts + brighter neon glow
+
+Click → opens shop page
+
+This creates a hyper-local “explore your city’s drip” vibe.
+
+🏪➡️🧺 3. Individual Shop Pages
+
+When you open a shop card:
+
+Large neon banner
+
+Glowing shop logo
+
+Shop description
+
+Tags
+
+Follow Shop button
+
+Product grid with neon-border product cards
+
+Smooth fade-in animations
+
+Essentially, each shop has its own brand presence inside DripDen.
+
+👟 4. Product Details Pages
+
+Clicking a product shows:
+
+Full-size image gallery
+
+Price
+
+Description
+
+Available sizes
+
+Available colors
+
+Save Heart (Wishlist)
+
+Add to Cart (neon glowing CTA button)
+
+Recommended items (AI can boost this later)
+
+Clean, minimal, neon UI.
+
+❤️ 5. Wishlist (Saved Items & Saved Shops)
+
+Users can save:
+
+Individual products
+
+Entire shops
+
+Saved items appear in the profile.
+Great for:
+
+Personalized shopping
+
+AI recommendations
+
+DripCoin rewards
+
+🔍 6. Search System (Shops + Products)
+
+Global search bar with:
+
+Real-time search (Firestore querying)
+
+Shop results
+
+Product results
+
+Filters (Streetwear, Vintage, Sneakers, Minimal, Budget, etc.)
+
+Gen-Z animated dropdown filters.
+
+🎚️ 7. Filters by Fashion Categories
+
+Filter results by vibes:
+
+Streetwear
+
+Vintage
+
+Minimal
+
+Girly
+
+Sneakers
+
+Budget
+
+Each filter glows when active.
+
+➕❤️ 8. Follow a Shop
+
+Users can follow local shops.
+
+Following a shop gives:
+
+Notifications for new drops
+
+Priority in Flash Drops
+
+Better AI recommendations
+
+Shop appears at top of feed
+
+🪙 9. DripCoins Reward System
+
+A gamified loyalty feature.
+
+Users earn DripCoins for:
+
+Daily login
+
+Buying products
+
+Saving items
+
+Following shops
+
+Sharing the app
+
+DripCoins can be used to:
+
+Unlock special items
+
+Get discounts
+
+Boost AI outfit generation credits
+
+Makes shopping fun + addictive.
+
+⚡ 10. Flash Drops Section
+
+A hype-based, limited-time drop area.
+
+Features:
+
+Neon pulsing border
+
+Countdown timer
+
+Limited quantity items from local shops
+
+High-demand products
+
+AI can later predict which items trend
+
+Designed to create FOMO.
+
+🧍‍♂️👗 11. User Profile
+
+User profile must include:
+
+Username
+
+Profile photo
+
+DripCoins balance
+
+Saved shops
+
+Saved items
+
+Outfit Boards
+
+Drip AI results
+
+Order history (if added later)
+
+Slick, glowing, dashboard feel.
+
+📌 12. Outfit Boards (Pinterest-style but Gen-Z themed)
+
+A user can:
+
+Create outfit combinations
+
+Save fits as boards
+
+Add products from shops
+
+Use AI to auto-generate boards
+
+Share boards
+
+Clean grid layout + neon accents.
+
+🧺 13. Add to Cart + Cart Page
+
+Features:
+
+Add items with size + color
+
+Adjust quantity
+
+Auto-total calculation
+
+Remove items
+
+Checkout placeholder CTA
+
+Neon glowing checkout button
+
+Smooth sliding animations.
+
+🔁 14. Smooth Page Transitions & Micro-Animations
+
+Required across all pages:
+
+Fade-ins
+
+Glow pulsing
+
+Card lift effects
+
+Smooth transitions
+
+Feels like a futuristic fashion app.
+
+🧠 OPTIONAL BUT RECOMMENDED (non-AI core features)
+
+Notifications for new drops
+
+Multi-shop browsing
+
+Trend-based home feed
+💫 PAGE BREAKDOWN
+
+(Same as previous list — landing, login, home, shop, product, cart, profile, flash drops.)
+
+📁 FIREBASE STRUCTURE
+
+(Add an AI section)
+
+users/
+    userId/
+        name
+        email
+        dripcoins
+        savedShops[]
+        savedProducts[]
+        outfits[]
+        aiPreferences
+        dripScoreHistory[]
+
+ai/
+    outfitSuggestions/
+    dripAnalyzerResults/
+    chatContext/
+
+⚙️ TECH STACK
+
+React + Vite / Next.js
+
+TailwindCSS
+
+Framer Motion
+
+Firebase Auth
+
+Firestore
+
+Firebase Storage
+
+AI API (OpenAI / Replicate / Groq etc.)
+
+Replit for hosting
+
+🎛️ ANIMATION REQUIREMENTS
+
+(same as before + AI assistant bubble animations)
+
+Glow pulsing AI icon
+
+Chat bubble pop-up transitions
+
+🧨 FINAL COMMAND (COPY THIS EXACTLY):
+
+“Build DRIPDEN exactly as described — a dark-mode, neon-glowing, Gen-Z fashion shopping web app with AI-powered outfit creation, drip rating, shop recommendations, an AI chat assistant, and intelligent curated boards. Blend futuristic neon aesthetics with powerful AI personalization features. Use React + TailwindCSS + Firebase + AI APIs. Create a smooth, animated, TikTok-style Gen-Z experience.”
