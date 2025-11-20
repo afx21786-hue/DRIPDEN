@@ -1,8 +1,8 @@
 import { Search, Heart, ShoppingCart, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 interface NavbarProps {
   dripCoins?: number;
@@ -17,14 +17,6 @@ export default function Navbar({
   wishlistItems = 12,
   onSearch 
 }: NavbarProps) {
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const notifications = [
-    { id: 1, label: "DripBot AI", count: 2 },
-    { id: 2, label: "Shop Updates", count: 5 },
-    { id: 3, label: "Flash Drops", count: 1 }
-  ];
-
   return (
     <motion.nav 
       initial={{ y: -20, opacity: 0 }}
@@ -52,107 +44,52 @@ export default function Navbar({
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-card border border-primary/30 neon-glow-primary">
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-md bg-card border border-primary/30 neon-glow-primary">
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-sm font-semibold gradient-text" data-testid="text-dripcoins">
                 {dripCoins}
               </span>
             </div>
 
-            <div className="relative">
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                className="relative hover-elevate active-elevate-2 h-9 w-9"
-                onClick={() => setShowNotifications(!showNotifications)}
-                data-testid="button-dripden-notifications"
-              >
-                <div className="w-5 h-5 rounded bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs font-bold">
-                  D
-                </div>
-                {(notifications.reduce((sum, n) => sum + n.count, 0) > 0) && (
-                  <div className="absolute -top-0.5 -right-0.5 h-4 w-4 flex items-center justify-center rounded-full bg-secondary text-[10px] font-bold border border-background">
-                    {notifications.reduce((sum, n) => sum + n.count, 0)}
-                  </div>
-                )}
-              </Button>
-
-              <AnimatePresence>
-                {showNotifications && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-12 w-64 bg-card border border-primary/30 rounded-lg shadow-neon-primary glass-blur overflow-hidden"
-                    data-testid="dropdown-notifications"
-                  >
-                    <div className="p-3 border-b border-primary/20">
-                      <h3 className="font-heading font-semibold text-sm">Notifications</h3>
-                    </div>
-                    <div className="divide-y divide-primary/10">
-                      {notifications.map((notification) => (
-                        <button
-                          key={notification.id}
-                          className="w-full p-3 hover-elevate active-elevate-2 text-left flex items-center justify-between gap-2"
-                          onClick={() => {
-                            console.log(`Selected notification: ${notification.id}`);
-                            setShowNotifications(false);
-                          }}
-                          data-testid={`notification-${notification.id}`}
-                        >
-                          <div className="flex items-center gap-2 flex-1">
-                            <div className="w-6 h-6 rounded bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs font-bold flex-shrink-0">
-                              {notification.id}
-                            </div>
-                            <span className="text-sm truncate">{notification.label}</span>
-                          </div>
-                          {notification.count > 0 && (
-                            <div className="h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full bg-secondary text-[10px] font-bold flex-shrink-0">
-                              {notification.count}
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
             <Button 
               size="icon" 
               variant="ghost" 
-              className="relative hover-elevate active-elevate-2 h-9 w-9"
+              className="relative hover-elevate active-elevate-2"
               data-testid="button-wishlist"
             >
               <Heart className="w-5 h-5" />
               {wishlistItems > 0 && (
-                <div className="absolute -top-0.5 -right-0.5 h-4 w-4 flex items-center justify-center rounded-full bg-secondary text-[10px] font-bold border border-background">
+                <Badge 
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-secondary text-xs"
+                  data-testid="badge-wishlist-count"
+                >
                   {wishlistItems}
-                </div>
+                </Badge>
               )}
             </Button>
 
             <Button 
               size="icon" 
               variant="ghost" 
-              className="relative hover-elevate active-elevate-2 h-9 w-9"
+              className="relative hover-elevate active-elevate-2"
               data-testid="button-cart"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartItems > 0 && (
-                <div className="absolute -top-0.5 -right-0.5 h-4 w-4 flex items-center justify-center rounded-full bg-primary text-[10px] font-bold border border-background">
+                <Badge 
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary text-xs"
+                  data-testid="badge-cart-count"
+                >
                   {cartItems}
-                </div>
+                </Badge>
               )}
             </Button>
 
             <Button 
               size="icon" 
               variant="ghost"
-              className="hover-elevate active-elevate-2 h-9 w-9"
+              className="hover-elevate active-elevate-2"
               data-testid="button-profile"
             >
               <User className="w-5 h-5" />
