@@ -4,6 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth-context";
 
 interface ShopCardProps {
   id: string;
@@ -19,6 +22,7 @@ interface ShopCardProps {
 }
 
 export default function ShopCard({
+  id,
   name,
   banner,
   logo,
@@ -30,6 +34,44 @@ export default function ShopCard({
   onClick
 }: ShopCardProps) {
   const [following, setFollowing] = useState(isFollowing);
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const handleToggleFollow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to follow shops",
+      });
+      return;
+    }
+
+    try {
+      if (following) {
+        await api.savedShops.unsave(id);
+        setFollowing(false);
+        toast({
+          title: "Unfollowed",
+          description: `You unfollowed ${name}`,
+        });
+      } else {
+        await api.savedShops.save(id);
+        setFollowing(true);
+        toast({
+          title: "Following",
+          description: `You're now following ${name}`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update shop follow status",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <motion.div
@@ -108,11 +150,7 @@ export default function ShopCard({
               size="sm"
               variant={following ? "default" : "outline"}
               className={following ? "bg-primary hover-elevate active-elevate-2" : "border-primary/30 hover-elevate active-elevate-2"}
-              onClick={(e) => {
-                e.stopPropagation();
-                setFollowing(!following);
-                console.log(`${following ? 'Unfollowed' : 'Followed'} ${name}`);
-              }}
+              onClick={handleToggleFollow}
               data-testid="button-follow-shop"
             >
               <Heart className={`w-4 h-4 ${following ? 'fill-current' : ''}`} />
