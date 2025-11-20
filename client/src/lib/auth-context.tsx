@@ -1,18 +1,23 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { api } from "./api";
 import { useQueryClient } from "@tanstack/react-query";
+import { onAuthChange, signInWithEmail, signUpWithEmail, signOut, signInWithGoogle } from "./firebase-auth";
+import type { User as FirebaseUser } from "firebase/auth";
 
 type User = {
   id: string;
   username: string;
+  email: string;
+  photoURL?: string;
   dripCoins: number;
 };
 
 type AuthContextType = {
   user: User | null;
+  firebaseUser: FirebaseUser | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -20,46 +25,53 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    checkAuth();
+    const unsubscribe = onAuthChange((fbUser) => {
+      setFirebaseUser(fbUser);
+      if (fbUser) {
+        setUser({
+          id: fbUser.uid,
+          username: fbUser.displayName || fbUser.email?.split("@")[0] || "User",
+          email: fbUser.email || "",
+          photoURL: fbUser.photoURL || undefined,
+          dripCoins: 0,
+        });
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  async function checkAuth() {
-    try {
-      const response = await api.auth.me();
-      if (response?.user) {
-        setUser(response.user);
-      }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function login(username: string, password: string) {
-    const response = await api.auth.login(username, password);
-    setUser(response.user);
+  async function login(email: string, password: string) {
+    await signInWithEmail(email, password);
     queryClient.invalidateQueries();
   }
 
-  async function register(username: string, password: string) {
-    const response = await api.auth.register(username, password);
-    setUser(response.user);
+  async function loginWithGoogle() {
+    await signInWithGoogle();
+    queryClient.invalidateQueries();
+  }
+
+  async function register(email: string, password: string) {
+    await signUpWithEmail(email, password);
     queryClient.invalidateQueries();
   }
 
   async function logout() {
-    await api.auth.logout();
+    await signOut();
     setUser(null);
     queryClient.clear();
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, firebaseUser, isLoading, login, loginWithGoogle, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
