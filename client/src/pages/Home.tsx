@@ -19,12 +19,6 @@ export default function Home() {
   const { data: shops, isLoading: shopsLoading } = useShops(searchQuery);
   const { data: allProducts } = useProducts();
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      setLocation("/login");
-    }
-  }, [authLoading, user, setLocation]);
-
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -33,10 +27,6 @@ export default function Home() {
         </div>
       </div>
     );
-  }
-
-  if (!user) {
-    return null;
   }
 
   const getShopProducts = (shopId: string) => {
@@ -52,7 +42,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar 
-        dripCoins={user.dripCoins}
+        dripCoins={user?.dripCoins || 0}
         cartItems={0}
         wishlistItems={0}
         onSearch={setSearchQuery}

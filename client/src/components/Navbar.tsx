@@ -1,8 +1,10 @@
-import { Search, Heart, ShoppingCart, Sparkles, User } from "lucide-react";
+import { Search, Heart, ShoppingCart, Sparkles, User, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { useAuth } from "@/lib/auth-context";
+import { useLocation } from "wouter";
 
 interface NavbarProps {
   dripCoins?: number;
@@ -12,11 +14,13 @@ interface NavbarProps {
 }
 
 export default function Navbar({ 
-  dripCoins = 1250, 
-  cartItems = 3, 
-  wishlistItems = 12,
+  dripCoins = 0, 
+  cartItems = 0, 
+  wishlistItems = 0,
   onSearch 
 }: NavbarProps) {
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
   return (
     <motion.nav 
       initial={{ y: -20, opacity: 0 }}
@@ -45,55 +49,78 @@ export default function Navbar({
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-md bg-card border border-primary/30 neon-glow-primary">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold gradient-text" data-testid="text-dripcoins">
-                {dripCoins}
-              </span>
-            </div>
+            {user ? (
+              <>
+                <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-md bg-card border border-primary/30 neon-glow-primary">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold gradient-text" data-testid="text-dripcoins">
+                    {dripCoins}
+                  </span>
+                </div>
 
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="relative hover-elevate active-elevate-2"
-              data-testid="button-wishlist"
-            >
-              <Heart className="w-5 h-5" />
-              {wishlistItems > 0 && (
-                <Badge 
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-secondary text-xs"
-                  data-testid="badge-wishlist-count"
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="relative hover-elevate active-elevate-2"
+                  data-testid="button-wishlist"
                 >
-                  {wishlistItems}
-                </Badge>
-              )}
-            </Button>
+                  <Heart className="w-5 h-5" />
+                  {wishlistItems > 0 && (
+                    <Badge 
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-secondary text-xs"
+                      data-testid="badge-wishlist-count"
+                    >
+                      {wishlistItems}
+                    </Badge>
+                  )}
+                </Button>
 
-            <Button 
-              size="icon" 
-              variant="ghost" 
-              className="relative hover-elevate active-elevate-2"
-              data-testid="button-cart"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartItems > 0 && (
-                <Badge 
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary text-xs"
-                  data-testid="badge-cart-count"
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="relative hover-elevate active-elevate-2"
+                  data-testid="button-cart"
                 >
-                  {cartItems}
-                </Badge>
-              )}
-            </Button>
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartItems > 0 && (
+                    <Badge 
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary text-xs"
+                      data-testid="badge-cart-count"
+                    >
+                      {cartItems}
+                    </Badge>
+                  )}
+                </Button>
 
-            <Button 
-              size="icon" 
-              variant="ghost"
-              className="hover-elevate active-elevate-2"
-              data-testid="button-profile"
-            >
-              <User className="w-5 h-5" />
-            </Button>
+                <Button 
+                  size="icon" 
+                  variant="ghost"
+                  className="hover-elevate active-elevate-2"
+                  data-testid="button-profile"
+                >
+                  <User className="w-5 h-5" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  className="hover-elevate active-elevate-2"
+                  onClick={() => setLocation("/login")}
+                  data-testid="button-login"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+                <Button
+                  className="neon-glow bg-gradient-to-r from-primary to-secondary"
+                  onClick={() => setLocation("/login")}
+                  data-testid="button-signup"
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -60,9 +60,13 @@ export const api = {
       return response.json();
     },
     me: async () => {
-      const response = await fetchAPI("/auth/me");
-      if (!response.ok) return null;
-      return response.json();
+      try {
+        const response = await fetchAPI("/auth/me");
+        if (!response.ok) return null;
+        return response.json();
+      } catch {
+        return null;
+      }
     },
   },
 
