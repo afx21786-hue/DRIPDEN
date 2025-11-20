@@ -1,27 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, MapPin, Heart } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLocation, useParams } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import DripBotChat from "@/components/DripBotChat";
-import bannerImg from "@assets/generated_images/streetwear_shop_banner_image.png";
-import productImg1 from "@assets/generated_images/sneaker_product_image_1.png";
-import productImg2 from "@assets/generated_images/jacket_product_image_2.png";
-import productImg3 from "@assets/generated_images/hoodie_product_image_3.png";
+import { useShop, useProducts, useSaveShop, useUnsaveShop, useSavedShops } from "@/lib/hooks";
+import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ShopPage() {
-  const [isFollowing, setIsFollowing] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const { data: shop, isLoading: shopLoading } = useShop(id!);
+  const { data: products, isLoading: productsLoading } = useProducts(id);
+  const { data: savedShops } = useSavedShops();
+  const saveShop = useSaveShop();
+  const unsaveShop = useUnsaveShop();
 
-  const mockProducts = [
-    { id: "1", name: "Neon Runner Sneakers", price: 129, image: productImg1, shopName: "Urban Threads" },
-    { id: "2", name: "Cyber Leather Jacket", price: 249, image: productImg2, shopName: "Urban Threads" },
-    { id: "3", name: "Pastel Dream Hoodie", price: 89, image: productImg3, shopName: "Urban Threads" },
-    { id: "4", name: "Future Tech Tee", price: 45, image: productImg1, shopName: "Urban Threads" },
-    { id: "5", name: "Neon Cargo Pants", price: 95, image: productImg2, shopName: "Urban Threads" },
-    { id: "6", name: "Holographic Cap", price: 35, image: productImg3, shopName: "Urban Threads" }
-  ];
+  const isFollowing = savedShops?.some((s: any) => s.shopId === id) || false;
+
+  const handleFollowClick = async () => {
+    try {
+      if (isFollowing) {
+        await unsaveShop.mutateAsync(id!);
+        toast({ title: "Shop unfollowed" });
+      } else {
+        await saveShop.mutateAsync(id!);
+        toast({ title: "Shop followed! You earned 10 DripCoins!", variant: "default" });
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  };
+
+  if (shopLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse gradient-text text-2xl font-heading">Loading shop...</div>
+      </div>
+    );
+  }
+
+  if (!shop) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-heading gradient-text mb-4">Shop not found</h1>
+          <Button onClick={() => setLocation("/")}>Back to Home</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,6 +66,7 @@ export default function ShopPage() {
         <Button 
           variant="ghost" 
           className="hover-elevate active-elevate-2"
+          onClick={() => setLocation("/")}
           data-testid="button-back"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -43,7 +79,7 @@ export default function ShopPage() {
           className="relative h-64 rounded-lg overflow-hidden border border-primary/30 neon-glow-primary"
         >
           <img 
-            src={bannerImg} 
+            src={shop.banner || "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200"} 
             alt="Shop banner" 
             className="w-full h-full object-cover"
           />
@@ -53,23 +89,22 @@ export default function ShopPage() {
             <div className="flex items-center gap-4">
               <div className="w-24 h-24 rounded-full border-2 border-primary neon-glow-primary overflow-hidden bg-card">
                 <img 
-                  src="https://api.dicebear.com/7.x/shapes/svg?seed=urban" 
-                  alt="Urban Threads logo" 
+                  src={shop.logo || `https://api.dicebear.com/7.x/shapes/svg?seed=${shop.name}`} 
+                  alt={`${shop.name} logo`} 
                   className="w-full h-full object-cover"
                 />
               </div>
               
               <div>
                 <h1 className="text-3xl font-heading font-bold mb-1" data-testid="text-shop-name">
-                  Urban Threads
+                  {shop.name}
                 </h1>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
-                    Downtown
+                    {shop.location}
                   </span>
-                  <span>500+ Products</span>
-                  <span>2.5K Followers</span>
+                  <span>{products?.length || 0} Products</span>
                 </div>
               </div>
             </div>
@@ -77,10 +112,7 @@ export default function ShopPage() {
             <Button
               className={`${isFollowing ? 'bg-primary' : 'border-primary/50'} hover-elevate active-elevate-2`}
               variant={isFollowing ? "default" : "outline"}
-              onClick={() => {
-                setIsFollowing(!isFollowing);
-                console.log(`${isFollowing ? 'Unfollowed' : 'Followed'} shop`);
-              }}
+              onClick={handleFollowClick}
               data-testid="button-follow"
             >
               <Heart className={`w-4 h-4 mr-2 ${isFollowing ? 'fill-current' : ''}`} />
@@ -98,12 +130,12 @@ export default function ShopPage() {
           <div>
             <h2 className="text-2xl font-heading font-semibold mb-2">About</h2>
             <p className="text-muted-foreground">
-              Your go-to destination for cutting-edge streetwear and urban fashion. We curate the latest trends from local and international brands, bringing you the freshest drops in the city.
+              {shop.description || "Discover the latest fashion trends at this amazing local shop."}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {["Streetwear", "Trending", "Local Favorite", "New Arrivals"].map((tag) => (
+            {shop.tags?.map((tag: string) => (
               <Badge 
                 key={tag} 
                 variant="outline" 
@@ -126,21 +158,35 @@ export default function ShopPage() {
             Products
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {mockProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 + index * 0.05 }}
-              >
-                <ProductCard
-                  {...product}
-                  onClick={() => console.log(`Clicked product: ${product.name}`)}
-                />
-              </motion.div>
-            ))}
-          </div>
+          {productsLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-pulse gradient-text">Loading products...</div>
+            </div>
+          ) : products && products.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {products.map((product: any, index: number) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + index * 0.05 }}
+                >
+                  <ProductCard
+                    id={product.id}
+                    name={product.name}
+                    price={parseFloat(product.price)}
+                    image={product.image}
+                    shopName={shop.name}
+                    onClick={() => setLocation(`/product/${product.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              No products available yet.
+            </div>
+          )}
         </motion.div>
       </div>
 

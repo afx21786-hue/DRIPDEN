@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FlashDropBanner from "@/components/FlashDropBanner";
@@ -6,111 +7,54 @@ import FilterBar from "@/components/FilterBar";
 import ShopCard from "@/components/ShopCard";
 import DripBotChat from "@/components/DripBotChat";
 import { motion } from "framer-motion";
-
-import bannerImg1 from "@assets/generated_images/streetwear_shop_banner_image.png";
-import bannerImg2 from "@assets/generated_images/vintage_shop_banner_image.png";
-import bannerImg3 from "@assets/generated_images/minimal_shop_banner_image.png";
-import productImg1 from "@assets/generated_images/sneaker_product_image_1.png";
-import productImg2 from "@assets/generated_images/jacket_product_image_2.png";
-import productImg3 from "@assets/generated_images/hoodie_product_image_3.png";
+import { useShops, useProducts } from "@/lib/hooks";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
+  const { user, isLoading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const mockShops = [
-    {
-      id: "1",
-      name: "Urban Threads",
-      banner: bannerImg1,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=urban",
-      tags: ["Streetwear", "Trending", "Local Favorite"],
-      location: "Downtown",
-      products: [
-        { image: productImg1 },
-        { image: productImg2 },
-        { image: productImg3 }
-      ],
-      isTrending: true
-    },
-    {
-      id: "2",
-      name: "Retro Vibes",
-      banner: bannerImg2,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=retro",
-      tags: ["Vintage", "Unique", "90s"],
-      location: "East Side",
-      products: [
-        { image: productImg2 },
-        { image: productImg3 },
-        { image: productImg1 }
-      ],
-      isTrending: false
-    },
-    {
-      id: "3",
-      name: "Minimal Studio",
-      banner: bannerImg3,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=minimal",
-      tags: ["Minimal", "Clean", "Modern"],
-      location: "West District",
-      products: [
-        { image: productImg3 },
-        { image: productImg1 },
-        { image: productImg2 }
-      ],
-      isTrending: false
-    },
-    {
-      id: "4",
-      name: "Neon District",
-      banner: bannerImg1,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=neon",
-      tags: ["Streetwear", "Hypebeast", "Limited"],
-      location: "Central",
-      products: [
-        { image: productImg1 },
-        { image: productImg3 },
-        { image: productImg2 }
-      ],
-      isTrending: true
-    },
-    {
-      id: "5",
-      name: "Pastel Dreams",
-      banner: bannerImg3,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=pastel",
-      tags: ["Girly", "Soft Girl", "Kawaii"],
-      location: "North End",
-      products: [
-        { image: productImg2 },
-        { image: productImg1 },
-        { image: productImg3 }
-      ],
-      isTrending: false
-    },
-    {
-      id: "6",
-      name: "Sneaker Haven",
-      banner: bannerImg2,
-      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=sneaker",
-      tags: ["Sneakers", "Limited Drops", "Authentic"],
-      location: "South Plaza",
-      products: [
-        { image: productImg1 },
-        { image: productImg2 },
-        { image: productImg3 }
-      ],
-      isTrending: true
+  const { data: shops, isLoading: shopsLoading } = useShops(searchQuery);
+  const { data: allProducts } = useProducts();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      setLocation("/login");
     }
-  ];
+  }, [authLoading, user, setLocation]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse gradient-text text-2xl font-heading">Loading DRIPDEN...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  const getShopProducts = (shopId: string) => {
+    if (!allProducts) return [];
+    return allProducts
+      .filter((p: any) => p.shopId === shopId)
+      .slice(0, 3)
+      .map((p: any) => ({ image: p.image }));
+  };
+
+  const displayShops = shops || [];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar 
-        dripCoins={1250}
-        cartItems={3}
-        wishlistItems={12}
+        dripCoins={user.dripCoins}
+        cartItems={0}
+        wishlistItems={0}
         onSearch={setSearchQuery}
       />
 
@@ -144,21 +88,34 @@ export default function Home() {
 
           <FilterBar onFilterChange={setActiveFilter} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockShops.map((shop, index) => (
-              <motion.div
-                key={shop.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-              >
-                <ShopCard
-                  {...shop}
-                  onClick={() => console.log(`Clicked shop: ${shop.name}`)}
-                />
-              </motion.div>
-            ))}
-          </div>
+          {shopsLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-pulse gradient-text">Loading shops...</div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayShops.map((shop: any, index: number) => (
+                <motion.div
+                  key={shop.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                >
+                  <ShopCard
+                    id={shop.id}
+                    name={shop.name}
+                    banner={shop.banner}
+                    logo={shop.logo}
+                    tags={shop.tags || []}
+                    location={shop.location}
+                    products={getShopProducts(shop.id)}
+                    isTrending={shop.isTrending}
+                    onClick={() => setLocation(`/shop/${shop.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.section>
       </div>
 
