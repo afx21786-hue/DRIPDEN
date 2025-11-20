@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Brain, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,8 @@ interface Message {
 }
 
 export default function DripBotChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -45,10 +46,53 @@ export default function DripBotChat() {
     }, 1000);
   };
 
+  const menuItems = [
+    {
+      id: "drip-analyzer",
+      icon: Brain,
+      label: "AI Drip Analyzer",
+      gradient: "from-secondary to-accent"
+    },
+    {
+      id: "shop-recommendations",
+      icon: TrendingUp,
+      label: "AI Shop Recommendations",
+      gradient: "from-accent to-primary"
+    },
+    {
+      id: "flash-predictor",
+      icon: Zap,
+      label: "Flash Drop Predictor",
+      gradient: "from-primary via-secondary to-accent"
+    },
+    {
+      id: "chat",
+      icon: MessageCircle,
+      label: "Chat with DripBot",
+      gradient: "from-primary to-secondary"
+    },
+    {
+      id: "outfit-combiner",
+      icon: Sparkles,
+      label: "AI Outfit Combiner",
+      gradient: "from-primary to-secondary"
+    }
+  ];
+
+  const handleMenuItemClick = (itemId: string) => {
+    if (itemId === "chat") {
+      setIsChatOpen(true);
+      setIsMenuOpen(false);
+    } else {
+      console.log(`Clicked: ${itemId}`);
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <>
       <AnimatePresence>
-        {isOpen && (
+        {isChatOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -66,7 +110,7 @@ export default function DripBotChat() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setIsChatOpen(false)}
                   className="hover-elevate active-elevate-2"
                   data-testid="button-close-chat"
                 >
@@ -123,6 +167,49 @@ export default function DripBotChat() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-24 right-6 z-50"
+            data-testid="dripden-menu"
+          >
+            <div 
+              className="rounded-2xl p-4 shadow-2xl border border-primary/30"
+              style={{
+                background: "rgba(15, 15, 16, 0.95)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)"
+              }}
+            >
+              <div className="grid grid-cols-2 gap-3 w-72">
+                {menuItems.map((item, index) => (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => handleMenuItemClick(item.id)}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br ${item.gradient} hover-elevate active-elevate-2 transition-all ${
+                      item.id === "chat" || item.id === "outfit-combiner" ? "col-span-2" : ""
+                    }`}
+                    data-testid={`menu-item-${item.id}`}
+                  >
+                    <item.icon className="w-6 h-6" />
+                    <span className="text-xs font-medium text-center leading-tight">
+                      {item.label}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -130,11 +217,14 @@ export default function DripBotChat() {
       >
         <Button
           size="icon"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsMenuOpen(!isMenuOpen);
+            setIsChatOpen(false);
+          }}
           className="h-14 w-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-neon-primary animate-neon-pulse"
-          data-testid="button-toggle-chat"
+          data-testid="button-toggle-dripden-menu"
         >
-          <MessageCircle className="w-6 h-6" />
+          <div className="text-xl font-heading font-bold">D</div>
         </Button>
       </motion.div>
     </>

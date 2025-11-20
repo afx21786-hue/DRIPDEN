@@ -4,9 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import FlashDropBanner from "@/components/FlashDropBanner";
 import FilterBar from "@/components/FilterBar";
 import ShopCard from "@/components/ShopCard";
-import AIFeatureCard from "@/components/AIFeatureCard";
 import DripBotChat from "@/components/DripBotChat";
-import { Sparkles, Brain, TrendingUp, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 import bannerImg1 from "@assets/generated_images/streetwear_shop_banner_image.png";
@@ -107,33 +105,6 @@ export default function Home() {
     }
   ];
 
-  const aiFeatures = [
-    {
-      icon: Sparkles,
-      title: "AI Outfit Combiner",
-      description: "Upload your favorite piece and let AI create 3 complete outfit combinations across different vibes",
-      gradient: "bg-gradient-to-br from-primary to-secondary"
-    },
-    {
-      icon: Brain,
-      title: "AI Drip Analyzer",
-      description: "Rate your fit, detect clothing items, and get personalized glow-up advice from our AI",
-      gradient: "bg-gradient-to-br from-secondary to-accent"
-    },
-    {
-      icon: TrendingUp,
-      title: "AI Shop Recommendations",
-      description: "Get personalized shop suggestions based on your taste, trends, and local fashion heat",
-      gradient: "bg-gradient-to-br from-accent to-primary"
-    },
-    {
-      icon: Zap,
-      title: "Flash Drop Predictor",
-      description: "AI predicts which items will trend next, giving you early access to upcoming heat",
-      gradient: "bg-gradient-to-br from-primary via-secondary to-accent"
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar 
@@ -160,41 +131,6 @@ export default function Home() {
           transition={{ delay: 0.3 }}
           className="space-y-6"
         >
-          <div>
-            <h2 className="text-3xl font-heading font-bold mb-2">
-              AI-Powered <span className="gradient-text">Fashion Tools</span>
-            </h2>
-            <p className="text-muted-foreground">
-              Elevate your style with cutting-edge AI technology
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {aiFeatures.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-              >
-                <AIFeatureCard
-                  icon={feature.icon}
-                  title={feature.title}
-                  description={feature.description}
-                  gradient={feature.gradient}
-                  onClick={() => console.log(`Clicked: ${feature.title}`)}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="space-y-6"
-        >
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-3xl font-heading font-bold mb-2">
@@ -214,7 +150,7 @@ export default function Home() {
                 key={shop.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
               >
                 <ShopCard
                   {...shop}
